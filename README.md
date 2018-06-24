@@ -21,3 +21,14 @@
    sorted_counts.take(10).foreach(println)
 6. Finally save the file to S3
    sc.parallelize(sorted_counts).saveAsTextFile("s3://bucket/wordcount-kids-story")
+   
+   
+## EMR cluster creation
+Instructions:
+1. create emr cluster
+2. download .pem file and save it somewhere
+3. setup foxyproxy tunnel, first install plugin in chrome
+4. create policy-settings file and import that into foxyproxy
+5. open different monitors: https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-web-interfaces.html
+6. connect to cluster using
+   ssh -i ./mykey.pem hadoop@nodename.amazonaws.com
