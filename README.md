@@ -92,3 +92,7 @@ val counts = file.flatMap(line => line.toLowerCase().replace(".", " ").replace("
 val sorted_counts = counts.collect().sortBy(wc => -wc._2)
 sorted_counts.take(10).foreach(println)
 
+### AWS Ports:
+Zeppelin: 8890
+Spark RM: 8088
+
