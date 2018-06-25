@@ -96,3 +96,16 @@ sorted_counts.take(10).foreach(println)
 Zeppelin: 8890
 Spark RM: 8088
 
+Name of interface 	
+
+URI
+YARN ResourceManager 	http://master-public-dns-name:8088/
+YARN NodeManager 	http://slave-public-dns-name:8042/
+Hadoop HDFS NameNode 	http://master-public-dns-name:50070/
+Hadoop HDFS DataNode 	http://slave-public-dns-name:50075/
+Spark HistoryServer 	http://master-public-dns-name:18080/
+Zeppelin 	http://master-public-dns-name:8890/
+Hue 	http://master-public-dns-name:8888/
+Ganglia 	http://master-public-dns-name/ganglia/
+HBase UI 	http://master-public-dns-name:16010/ 
+
