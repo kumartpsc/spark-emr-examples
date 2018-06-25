@@ -46,7 +46,7 @@ import java.nio.charset.Charset
 // load bank data
 val bankText = sc.parallelize(
     IOUtils.toString(
-        new URL("https://s3.amazonaws.com/apache-zeppelin/tutorial/bank/bank.csv"),
+        new URL(""s3://emr-poc-3-s3/bank-employees.csv"),
         Charset.forName("utf8")).split("\n"))
 
 case class Bank(age: Integer, job: String, marital: String, education: String, balance: Integer)
@@ -87,6 +87,7 @@ order by age
 
 
 ### Wordcount POC
+
 val file = sc.textFile("s3://emr-poc-3-s3/kids-story.txt")
 val counts = file.flatMap(line => line.toLowerCase().replace(".", " ").replace(",", " ").split(" ")).map(word => (word, 1L)).reduceByKey(_ + _)
 val sorted_counts = counts.collect().sortBy(wc => -wc._2)
