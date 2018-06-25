@@ -32,3 +32,63 @@ Instructions:
 5. open different monitors: https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-web-interfaces.html
 6. connect to cluster using
    ssh -i ./mykey.pem hadoop@nodename.amazonaws.com
+
+### Zeppelin notebook for wordcount
+
+### Zeppelin notebook for sparksql
+import org.apache.commons.io.IOUtils
+import java.net.URL
+import java.nio.charset.Charset
+
+// Zeppelin creates and injects sc (SparkContext) and sqlContext (HiveContext or SqlContext)
+// So you don't need create them manually
+
+// load bank data
+val bankText = sc.parallelize(
+    IOUtils.toString(
+        new URL("https://s3.amazonaws.com/apache-zeppelin/tutorial/bank/bank.csv"),
+        Charset.forName("utf8")).split("\n"))
+
+case class Bank(age: Integer, job: String, marital: String, education: String, balance: Integer)
+
+val bank = bankText.map(s => s.split(";")).filter(s => s(0) != "\"age\"").map(
+    s => Bank(s(0).toInt, 
+            s(1).replaceAll("\"", ""),
+            s(2).replaceAll("\"", ""),
+            s(3).replaceAll("\"", ""),
+            s(5).replaceAll("\"", "").toInt
+        )
+).toDF()
+bank.registerTempTable("bank")
+
+## Query 
+%sql 
+select age, count(1) value
+from bank 
+where age <25
+group by age 
+order by age
+
+## Query2
+%sql 
+select age, count(1) value 
+from bank 
+where age < ${maxAge=35} 
+group by age 
+order by age
+
+## Query3
+%sql 
+select age, count(1) value 
+from bank 
+where marital="${marital=single,single|divorced|married}" 
+group by age 
+order by age
+
+
+### Wordcount POC
+val file = sc.textFile("s3://emr-poc-3-s3/kids-story.txt")
+val counts = file.flatMap(line => line.toLowerCase().replace(".", " ").replace(",", " ").split(" ")).map(word => (word, 1L)).reduceByKey(_ + _)
+val sorted_counts = counts.collect().sortBy(wc => -wc._2)
+sorted_counts.take(10).foreach(println)
+
